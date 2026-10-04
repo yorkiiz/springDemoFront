@@ -26,7 +26,8 @@ const handleLogout = async () => {
   <div class="home-container">
     <el-header class="header">
       <div class="logo">电商系统</div>
-      <div class="user-info">
+      <div class="header-right">
+        <el-button type="primary" @click="router.push('/product')">商品列表</el-button>
         <el-dropdown>
           <span class="user-name">
             {{ userStore.userInfo?.username || '用户' }}
@@ -45,6 +46,9 @@ const handleLogout = async () => {
       <div class="welcome">
         <h1>欢迎回来，{{ userStore.userInfo?.username || '用户' }}！</h1>
         <p>这是一个电商管理系统</p>
+        <el-button type="primary" size="large" @click="router.push('/product')">
+          去购物
+        </el-button>
       </div>
     </el-main>
   </div>
@@ -75,6 +79,12 @@ import { ArrowDown } from '@element-plus/icons-vue'
   color: #333;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .user-name {
   display: flex;
   align-items: center;
@@ -99,5 +109,6 @@ import { ArrowDown } from '@element-plus/icons-vue'
 .welcome p {
   font-size: 16px;
   color: #666;
+  margin-bottom: 24px;
 }
 </style>
