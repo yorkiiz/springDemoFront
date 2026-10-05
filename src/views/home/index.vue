@@ -28,6 +28,7 @@ const handleLogout = async () => {
       <div class="logo">电商系统</div>
       <div class="header-right">
         <el-button type="primary" @click="router.push('/product')">商品列表</el-button>
+        <el-button @click="router.push('/order')">我的订单</el-button>
         <el-dropdown>
           <span class="user-name">
             {{ userStore.userInfo?.username || '用户' }}
