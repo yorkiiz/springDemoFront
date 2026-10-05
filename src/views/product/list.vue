@@ -11,14 +11,29 @@ const pagination = ref({
   pageSize: 10,
   total: 0
 })
+const searchForm = ref({
+  keyword: '',
+  minPrice: '',
+  maxPrice: ''
+})
 
 const fetchProducts = async () => {
   loading.value = true
   try {
-    const res = await getProductList({
+    const params = {
       pageNum: pagination.value.pageNum,
       pageSize: pagination.value.pageSize
-    })
+    }
+    if (searchForm.value.keyword) {
+      params.keyword = searchForm.value.keyword
+    }
+    if (searchForm.value.minPrice !== '') {
+      params.minPrice = searchForm.value.minPrice
+    }
+    if (searchForm.value.maxPrice !== '') {
+      params.maxPrice = searchForm.value.maxPrice
+    }
+    const res = await getProductList(params)
     productList.value = res.data.records
     pagination.value.total = res.data.total
   } catch (error) {
@@ -26,6 +41,21 @@ const fetchProducts = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const handleSearch = () => {
+  pagination.value.pageNum = 1
+  fetchProducts()
+}
+
+const handleReset = () => {
+  searchForm.value = {
+    keyword: '',
+    minPrice: '',
+    maxPrice: ''
+  }
+  pagination.value.pageNum = 1
+  fetchProducts()
 }
 
 const handlePageChange = (page) => {
@@ -52,6 +82,40 @@ onMounted(() => {
     </el-header>
     <el-main class="main">
       <h2 class="page-title">商品列表</h2>
+      <el-card class="search-card">
+        <el-form :model="searchForm" inline>
+          <el-form-item label="关键词">
+            <el-input
+              v-model="searchForm.keyword"
+              placeholder="请输入商品名称"
+              clearable
+              @keyup.enter="handleSearch"
+            />
+          </el-form-item>
+          <el-form-item label="最低价">
+            <el-input-number
+              v-model="searchForm.minPrice"
+              :min="0"
+              :precision="2"
+              placeholder="最低价"
+              controls-position="right"
+            />
+          </el-form-item>
+          <el-form-item label="最高价">
+            <el-input-number
+              v-model="searchForm.maxPrice"
+              :min="0"
+              :precision="2"
+              placeholder="最高价"
+              controls-position="right"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="handleSearch">搜索</el-button>
+            <el-button @click="handleReset">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
       <el-row :gutter="20">
         <el-col
           v-for="item in productList"
@@ -129,6 +193,10 @@ onMounted(() => {
 .page-title {
   margin-bottom: 20px;
   color: #333;
+}
+
+.search-card {
+  margin-bottom: 20px;
 }
 
 .product-card {
