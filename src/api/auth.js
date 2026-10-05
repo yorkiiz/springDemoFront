@@ -18,3 +18,7 @@ export const logout = () => {
 export const getUserInfo = () => {
   return request.get('/user/info')
 }
+
+export const updateUserInfo = (data) => {
+  return request.post('/user/update', data)
+}
